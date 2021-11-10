@@ -1,4 +1,4 @@
-{
+* {
   font-family: 'Tomorrow', sans-serif;
 }
 
@@ -116,10 +116,3 @@ button {
     background-position: 200% 50%;
   }
 }
-.container {background-color: #171e3a; color: #ffff; width: 850px;}
-body {background-color: #171e3a; background-image: url("https://backiee.com/static/wpdb/wallpapers/1920x1080/266987.jpg"); background-repeat: no-repeat; background-size: cover;}
-.offcanvas-body {background-color: black; color:#f94e9b;}
-h1 {color: #f4cf3e; font-family: ravie;}
-.offcanvas-header {background-color: black;}
-#roomHeader {color: #f4cf3e;}
-#userList {color: #f4cf3e;}
