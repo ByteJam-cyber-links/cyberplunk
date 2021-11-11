@@ -4,4 +4,23 @@ body {background-color: #171e3a; background-image: url("https://backiee.com/stat
 h1 {color: #f4cf3e; font-family: ravie;}
 .offcanvas-header {background-color: black;}
 #roomHeader {color: #f4cf3e;}
-#userList {color: #f4cf3e;}
+#userList {color: #f4cf3e; padding-left: 15px; font-size: 22px;}
+#userListOffCanvas {padding-left: 15px; font-size: 23px;}
+#messageForm {padding: 12px 75px;}
+
+button[type=button], button[type=submit] {
+    display: inline-block;
+    padding: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: purple;
+    border: none;
+    border-radius: 0px;
+    box-shadow: 0 4px #999;
+  }
+  
+button[type=button]:hover , button[type=submit]:hover {background-color: #f94e9b}
