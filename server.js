@@ -93,10 +93,26 @@ io.on('connection', (socket) => {
         encounterInProgress = true;
       }
       if(encounterInProgress){
-        if (msg === "attack" && socket.id === currentPersonID){
-          console.log('attacked');
-          enemyHP -= 10;
-          console.log(enemyHP);
+        if(encounter.isSkillOrCombat === 0){
+          if (msg === "attack" && socket.id === currentPersonID){
+            console.log('attacked');
+            enemyHP -= 10;
+            console.log(enemyHP);
+          }
+        }
+        else{
+          if (msg === "roll" && socket.id === currentPersonID){
+            roll = randomIntFromInterval(1, 20);
+            console.log(roll + ":" + encounter.DC)
+            if (roll >= encounter.DC){
+              io.to(room).emit('chat message', formatMessage("server", encounter.passOutcome));
+              enemyHP = 0;
+            }
+            else{
+              io.to(room).emit('chat message', formatMessage("server", encounter.failOutcom));
+              enemyHP = 0;
+            }
+          }
         }
         if (enemyHP > 0){
           try{
@@ -112,7 +128,9 @@ io.on('connection', (socket) => {
           io.to(room).emit('chat message', formatMessage("server", `${currentPerson.username}, what will you do?`));
         }
         else{
+          if(encounter.isSkillOrCombat === 0){
           io.to(room).emit('chat message', formatMessage("server", `You won! Type something to continue..`));
+          }
           encounterInProgress = false;
         }
       }
@@ -139,10 +157,14 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 
+function randomIntFromInterval(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
 function gameSetup(room){
   encounter = randEncounter();
   io.to(room).emit('chat message', formatMessage(encounter.name, encounter.description));
-  if (encounter.isSkillOrCombat == 0){
+  if (encounter.isSkillOrCombat === 0){
     enemyHP = encounter.hp;
     console.log('enemy hp ' + enemyHP);
   }
