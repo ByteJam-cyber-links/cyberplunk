@@ -9,24 +9,27 @@ const { userJoin, getCurrentUser, userLeave, getRoomUsers } = require('./utils/u
 const { randEncounter } = require('./utils/encounter');
 const { formatMessage } = require('./utils/messages');
 const e = require('cors');
-const { getStartingWeapon } = require('./utils/weapons');
+const { randWeapon, getStartingWeapon } = require('./utils/weapons');
+const { disconnect } = require('process');
 const PORT = process.env.PORT || 5000;
 
-const messageHistory = [];
 usersReady = false;
 enemyHP = 0;
 encounterInProgress = false;
 gameRunning = false;
-validMessages = ["attack"];
+validCombatMessages = ["attack", "roll", "fight"];
+validSkillMessages = ["roll"];
 
 app.use(express.static(path.join(__dirname, 'public')));
 
 io.on('connection', (socket) => {
+
   socket.on('joinRoom', ({username, room}) => {
+    if (gameRunning){
+      socket.disconnect();
+    }
 
-    socket.emit('previous messages', { messageHistory, room });
-
-    socket.emit('chat message', formatMessage('Server', 'Please enter your class and type "start" to start the game when everyone is ready'));
+    socket.emit('chat message', formatMessage('Server', 'Please enter your class (Solo, Medtech, or Netrunner) and type "start" to start the game when everyone is ready'));
     healths = getRandomInt(100);
     const user = userJoin(socket.id, username, room, false, null, healths, healths, getStartingWeapon());
 
@@ -94,24 +97,59 @@ io.on('connection', (socket) => {
       }
       if(encounterInProgress){
         if(encounter.isSkillOrCombat === 0){
-          if (msg === "attack" && socket.id === currentPersonID){
-            console.log('attacked');
-            enemyHP -= 10;
-            console.log(enemyHP);
+          if (validCombatMessages.includes(msg) && socket.id === currentPersonID){
+            //console.log('attacked');
+            damage = randomIntFromInterval(currentPerson.weapon.min, currentPerson.weapon.max);
+            enemyHP -= damage;
+            io.to(room).emit('chat message', formatMessage("server", `${getCurrentUser(currentPersonID).username} dealt ${damage} damage leaving ${encounter.enemyName} with ${enemyHP >= 0 ? enemyHP : 0} HP`));
+            if (enemyHP > 0){
+              damage = randomIntFromInterval(encounter.minAttack, encounter.maxAttack);
+              getCurrentUser(currentPersonID).health -= damage;
+              io.to(room).emit('chat message', formatMessage("server", `${encounter.enemyName} dealt ${damage} damage to ${getCurrentUser(currentPersonID).username}`));
+              getCurrentUser(currentPersonID).health <= 0 ? disconnectSocket(currentPersonID) : {};
+              io.to(room).emit('userdata', {
+                room: user.room,
+                users: getRoomUsers(user.room)
+              });
+              //console.log(enemyHP);
+            }
           }
         }
         else{
-          if (msg === "roll" && socket.id === currentPersonID){
+          if (validSkillMessages.includes(msg) && socket.id === currentPersonID){
             roll = randomIntFromInterval(1, 20);
             console.log(roll + ":" + encounter.DC)
             if (roll >= encounter.DC){
               io.to(room).emit('chat message', formatMessage("server", encounter.passOutcome));
+              if(encounter.findWeapon){
+                foundWeapon = randWeapon();
+                if(foundWeapon.max > currentPerson.weapon.max){
+                  io.to(room).emit('chat message', formatMessage("server", `${currentPerson.username} found a(n) ${foundWeapon.name} and left their ${currentPerson.weapon.name}`));
+                  currentPerson.weapon = foundWeapon;
+                }
+                else{
+                  io.to(room).emit('chat message', formatMessage("server", `${currentPerson.username} found a(n) ${foundWeapon.name} but did not take it because their ${currentPerson.weapon.name} is better`));
+                }
+              }
+              roomUsers.forEach(user => user.health += encounter.heal);
+              roomUsers.forEach(user => user.health > user.maxhealth ? user.health = user.maxhealth : {});
+              io.to(room).emit('userdata', {
+                room: user.room,
+                users: getRoomUsers(user.room)
+              });
               enemyHP = 0;
             }
             else{
               io.to(room).emit('chat message', formatMessage("server", encounter.failOutcom));
+              roomUsers.forEach(user => user.health -= encounter.dmg);
+              roomUsers.forEach(user => user.health <= 0 ? disconnectSocket(user.id) : {});
+              io.to(room).emit('userdata', {
+                room: user.room,
+                users: getRoomUsers(user.room)
+              });
               enemyHP = 0;
             }
+            io.to(room).emit('chat message', formatMessage("server", `Type something to continue..`));
           }
         }
         if (enemyHP > 0){
@@ -125,7 +163,13 @@ io.on('connection', (socket) => {
             currentPersonID = roomUsersIds[Math.floor(Math.random() * roomUsersIds.length)];
             currentPerson = getCurrentUser(currentPersonID);
           }
+          try{
           io.to(room).emit('chat message', formatMessage("server", `${currentPerson.username}, what will you do?`));
+          }
+          catch{
+            currentPersonID = roomUsersIds[Math.floor(Math.random() * roomUsersIds.length)];
+            currentPerson = getCurrentUser(currentPersonID);
+          }
         }
         else{
           if(encounter.isSkillOrCombat === 0){
@@ -138,8 +182,6 @@ io.on('connection', (socket) => {
     //console.log(gameRunning);
 
     // End game logic
-
-    messageHistory.push({ ...formatMessage(user.username, msg), messageRoom: user.room })
   });
 
   socket.on('disconnect', () => {
@@ -159,6 +201,14 @@ function getRandomInt(max) {
 
 function randomIntFromInterval(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+function disconnectSocket(givenSocketID){
+  io.sockets.sockets.forEach((socket) => {
+    // If given socket id is exist in list of all sockets, kill it
+    if(socket.id === givenSocketID)
+        socket.disconnect(true);
+  });
 }
 
 function gameSetup(room){

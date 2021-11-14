@@ -1,7 +1,7 @@
 const users = [];
 
-function userJoin(id, username, room, characterCreated, role, health, maxhealth, items ){
-    const user = { id, username, room, characterCreated, role, health, maxhealth, items }
+function userJoin(id, username, room, characterCreated, role, health, maxhealth, weapon ){
+    const user = { id, username, room, characterCreated, role, health, maxhealth, weapon }
     users.push(user);
     return user;
 }
