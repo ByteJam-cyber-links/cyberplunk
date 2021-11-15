@@ -25,12 +25,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 io.on('connection', (socket) => {
 
   socket.on('joinRoom', ({username, room}) => {
+    if(getRoomUsers(room).length === 0){
+      usersReady = false;
+      enemyHP = 0;
+      encounterInProgress = false;
+      gameRunning = false;
+    };
     if (gameRunning){
       socket.disconnect();
     }
     else{
       socket.emit('chat message', formatMessage('Server', 'Please enter your class (Solo, Medtech, or Netrunner) and type "start" to start the game when everyone is ready'));
-      healths = getRandomInt(100);
+      healths = getRandomInt(5);
       const user = userJoin(socket.id, username, room, false, null, healths, healths, getStartingWeapon());
 
       socket.join(user.room);
@@ -43,6 +49,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('chat message', (msg) => {
+    try{
     const username = getCurrentUser(socket.id).username;
     const user = getCurrentUser(socket.id);
     const room = getCurrentUser(socket.id).room;
@@ -107,7 +114,11 @@ io.on('connection', (socket) => {
               damage = randomIntFromInterval(encounter.minAttack, encounter.maxAttack);
               getCurrentUser(currentPersonID).health -= damage;
               io.to(room).emit('chat message', formatMessage("server", `${encounter.enemyName} dealt ${damage} damage to ${getCurrentUser(currentPersonID).username}`));
-              getCurrentUser(currentPersonID).health <= 0 ? disconnectSocket(currentPersonID) : {};
+              if(getCurrentUser(currentPersonID).health <= 0) {
+                io.to(room).emit('chat message', formatMessage("server", `${getCurrentUser(currentPersonID).username} died`));
+                disconnectSocket(currentPersonID); 
+                userLeave(currentPersonID);
+              }
               io.to(room).emit('userdata', {
                 room: user.room,
                 users: getRoomUsers(user.room)
@@ -180,9 +191,8 @@ io.on('connection', (socket) => {
         }
       }
     }
-    //console.log(gameRunning);
-
-    // End game logic
+  }
+  catch{};
   });
 
   socket.on('disconnect', () => {

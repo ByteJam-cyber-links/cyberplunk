@@ -2,7 +2,7 @@
 
 randomEncounters = 
     [
-        { 
+        /*{ 
             name: "Sneaking Past Guards", 
             description: "You turn around the corner and see guards blocking your path. Sneak past to get by.", 
             DC: 10, 
@@ -21,7 +21,7 @@ randomEncounters =
             hp: 20, 
             minAttack: 5, 
             maxAttack: 10
-        },
+        },*/
         { 
             name: "Cybernetic Thieves!", 
             description: "You're being jumped by a bunch of low-lives who want to steal your cybernetic implants. Roll Initiative!", 
@@ -30,7 +30,7 @@ randomEncounters =
             hp: 30, 
             minAttack: 10, 
             maxAttack: 25
-        },
+        },/*
         { 
             name: "Drones!", 
             description: "A swarm of exploding drones flys by and begin to dive bomb you. Run and dodge to get away and not die.",
@@ -63,7 +63,7 @@ randomEncounters =
             heal: 0,
             findWeapon: true,
             isSkillOrCombat: 1,
-        }
+        }*/
     ]
 
 function randEncounter() {
