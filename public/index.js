@@ -31,22 +31,12 @@ if (messageInput.value) {
 socket.on('chat message', function(messageObject) {
     var item = document.createElement('div');
     item.classList.add('message');
-    item.innerHTML = `<p class="meta">${messageObject.username} <span>${messageObject.time}</span></p><p class="text">${messageObject.message}</p>`;
-    document.getElementById("messages").appendChild(item);
+    item.innerHTML = `<p class="meta">${messageObject.username}</p><p class="text">${messageObject.message}</p>`;
+    messages.appendChild(item);
 
-    window.scrollTo(0, document.body.scrollHeight);
+    messages.scrollTop = messages.scrollHeight;
+    //window.scrollTo(0, document.body.scrollHeight);
 });
-
-socket.on('previous messages', function(data) {
-    data.messageHistory.forEach((messageData, i) => {
-        if (data.room === messageData.messageRoom) {
-            var item = document.createElement('div');
-            item.classList.add('message');
-            item.innerHTML = `<p class="meta">${messageData.username} <span>${messageData.time}</span></p><p class="text">${messageData.message}</p>`;
-            document.getElementById("messages").appendChild(item);
-        }
-    });
-})
 
 socket.on('roomUsers', ({ room, users }) => {
     roomHeader.innerText = `Users In ${room}`;

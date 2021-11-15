@@ -1,12 +1,125 @@
-.container {background-color: #171e3a; color: #ffff; width: 850px;}
-body {background-color: #171e3a; background-image: url("https://backiee.com/static/wpdb/wallpapers/1920x1080/266987.jpg"); background-repeat: no-repeat; background-size: cover;}
-.offcanvas-body {background-color: black; color:#f94e9b;}
-h1 {color: #f4cf3e; font-family: ravie;}
-.offcanvas-header {background-color: black;}
-#roomHeader {color: #f4cf3e;}
-#userList {color: #f4cf3e; padding-left: 15px; font-size: 22px;}
-#userListOffCanvas {padding-left: 15px; font-size: 23px;}
-#messageForm {padding: 12px 75px;}
+.container {
+  background-color: #171e3aE6;
+  color: #ffff;
+}
+
+body {
+  padding-top: .5rem;
+  padding-bottom: 3rem; 
+  font-family: 'Karla', sans-serif; 
+  background-color: #171e3a;
+  background-image: url("https://backiee.com/static/wpdb/wallpapers/1920x1080/266987.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(168, 158, 207); 
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(106, 31, 109); 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(75, 6, 77); 
+}
+
+#userList{
+  list-style: none;
+  margin: 0;
+  padding-left: .4em;
+}
+
+.userListItem{
+  overflow-wrap: anywhere;
+}
+
+.offcanvas-body {
+  color: white;
+  background-color:rgb(75, 6, 77);
+}
+
+h1 {
+  /*
+  color: #f4cf3e;
+  font-family: ravie;
+  */
+  color:white;
+}
+
+.offcanvas-header {
+  background-color:rgb(75, 6, 77);
+}
+
+#roomHeader {
+  /*color: #f4cf3e;*/
+  color: white;
+}
+
+#userList {
+  /*color: #f4cf3e;*/
+  color: white;
+  padding-left: 15px;
+  font-size: 22px;
+}
+
+.details{
+  height: 0%;
+  position: sticky;
+  top: 0;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+#messages{
+  max-height: 91vh;
+  overflow: auto;
+}
+
+.message{
+  background-color: rgba(248, 13, 251, .4);
+  padding: .5em;
+  width: 100%;
+  margin: .5em 0;
+  /*overflow: auto;*/
+  /*border-radius: .25em;*/
+  overflow-wrap: anywhere;
+}
+
+#userListOffCanvas {
+  padding-left: 15px;
+  font-size: 23px;
+}
+
+#messageForm { 
+  background: transparent;
+  padding: 1em;
+}
+
+#messageInput { 
+  border: none;
+  border-radius: .25em;
+  font-size: large;
+  padding: .3em;
+  width: 40%;
+}
+
+#messageInput:focus { 
+  outline: none; 
+}
+
+.message p{
+  margin: 0;
+}
+
+.showUsers{
+  display: none !important;
+}
 
 button[type=button], button[type=submit] {
     display: inline-block;
@@ -17,10 +130,43 @@ button[type=button], button[type=submit] {
     text-decoration: none;
     outline: none;
     color: #fff;
-    background-color: purple;
+    background-color: rgb(168, 158, 207);
     border: none;
-    border-radius: 0px;
-    box-shadow: 0 4px #999;
+    border-radius: .25em;
+    /*box-shadow: 0 4px rgb(168, 158, 207);*/
   }
   
-button[type=button]:hover , button[type=submit]:hover {background-color: #f94e9b}
+button[type=button]:hover , button[type=submit]:hover {
+  background-color: rgb(75, 6, 77);
+}
+
+@media screen and (max-width: 768px) {
+
+  body{
+    background-image: none;
+  }
+
+  .details{
+      display: none;
+  }
+
+  .showUsers{
+      display: inline !important;
+      border-radius: .25em;
+  }
+
+  .userListItem{
+      display: inline;
+      padding-right: 1em;
+  }
+}
+
+@media screen and (max-width: 577px) {
+  .showUsers{
+      display: inline !important;
+  }
+
+  .sendButton{
+    margin-left: 4px;
+  } 
+}
