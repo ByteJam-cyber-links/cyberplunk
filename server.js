@@ -113,7 +113,8 @@ io.on('connection', (socket) => {
               io.to(room).emit('chat message', formatMessage("server", `${encounter.enemyName} dealt ${damage} damage to ${getCurrentUser(currentPersonID).username}`));
               if(getCurrentUser(currentPersonID).health <= 0) {
                 io.to(room).emit('chat message', formatMessage("server", `${getCurrentUser(currentPersonID).username} died`));
-                disconnectSocket(currentPersonID); 
+                setTimeout (() => {disconnectSocket(currentPersonID)}, 5 * 1000); 
+                //disconnectSocket(currentPersonID);
                 userLeave(currentPersonID);
               }
               io.to(room).emit('userdata', {
@@ -153,7 +154,8 @@ io.on('connection', (socket) => {
               roomUsers.forEach(user => {
                 if (user.health <= 0) { 
                   io.to(room).emit('chat message', formatMessage("server", `${getCurrentUser(currentPersonID).username} died`));
-                  disconnectSocket(currentPersonID); 
+                  setTimeout (() => {disconnectSocket(currentPersonID)}, 5 * 1000);
+                  //disconnectSocket(currentPersonID);
                   userLeave(currentPersonID);
                 }
               });
