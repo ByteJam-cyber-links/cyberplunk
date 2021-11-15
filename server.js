@@ -33,6 +33,7 @@ io.on('connection', (socket) => {
     };
     if (gameRunning){
       socket.disconnect();
+      userLeave(socket.id);
     }
     else{
       socket.emit('chat message', formatMessage('Server', 'Please enter your class (Solo, Medtech, or Netrunner) and type "start" to start the game when everyone is ready'));
@@ -72,17 +73,14 @@ io.on('connection', (socket) => {
           user.maxhealth += 10;
         }
         user.characterCreated = true;
-      }
-      //console.log(user) 
+      } 
     }
 
     // game logic
     //
-    //console.log(`game started in ${room}`);
 
     roomUsers = getRoomUsers(room);
     roomUsersIds = roomUsers.map(oof => oof.id);
-    //console.log(roomUsersIds);
 
     usersReady = true;
     roomUsers.forEach(user => !user.characterCreated ? usersReady = false : {});
@@ -106,7 +104,6 @@ io.on('connection', (socket) => {
       if(encounterInProgress){
         if(encounter.isSkillOrCombat === 0){
           if (validCombatMessages.includes(msg) && socket.id === currentPersonID){
-            //console.log('attacked');
             damage = randomIntFromInterval(currentPerson.weapon.min, currentPerson.weapon.max);
             enemyHP -= damage;
             io.to(room).emit('chat message', formatMessage("server", `${getCurrentUser(currentPersonID).username} dealt ${damage} damage leaving ${encounter.enemyName} with ${enemyHP >= 0 ? enemyHP : 0} HP`));
@@ -123,14 +120,12 @@ io.on('connection', (socket) => {
                 room: user.room,
                 users: getRoomUsers(user.room)
               });
-              //console.log(enemyHP);
             }
           }
         }
         else{
           if (validSkillMessages.includes(msg) && socket.id === currentPersonID){
             roll = randomIntFromInterval(1, 20);
-            console.log(roll + ":" + encounter.DC)
             if (roll >= encounter.DC){
               io.to(room).emit('chat message', formatMessage("server", encounter.passOutcome));
               if(encounter.findWeapon){
@@ -176,7 +171,7 @@ io.on('connection', (socket) => {
             currentPerson = getCurrentUser(currentPersonID);
           }
           try{
-          io.to(room).emit('chat message', formatMessage("server", `${currentPerson.username}, what will you do?`));
+          io.to(room).emit('chat message', formatMessage("server", `${currentPerson.username}, what will you do? (roll)`));
           }
           catch{
             currentPersonID = roomUsersIds[Math.floor(Math.random() * roomUsersIds.length)];
@@ -227,7 +222,6 @@ function gameSetup(room){
   io.to(room).emit('chat message', formatMessage(encounter.name, encounter.description));
   if (encounter.isSkillOrCombat === 0){
     enemyHP = encounter.hp;
-    console.log('enemy hp ' + enemyHP);
   }
   else{
     enemyHP = 1;
