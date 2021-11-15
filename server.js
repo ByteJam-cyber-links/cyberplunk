@@ -126,6 +126,7 @@ io.on('connection', (socket) => {
         else{
           if (validSkillMessages.includes(msg.toLowerCase()) && socket.id === currentPersonID){
             roll = randomIntFromInterval(1, 20);
+            io.to(room).emit('chat message', formatMessage("server", `You Rolled: ${roll}`))
             if (roll >= encounter.DC){
               io.to(room).emit('chat message', formatMessage("server", encounter.passOutcome));
               if(encounter.findWeapon){
