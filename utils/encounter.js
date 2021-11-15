@@ -5,7 +5,7 @@ randomEncounters =
         { 
             name: "Sneaking Past Guards", 
             description: "You turn around the corner and see guards blocking your path. Sneak past to get by.", 
-            DC: 10, 
+            DC: 13, 
             passOutcome: "You pass the guards without them spotting you.", 
             failOutcom: "You have been spotted! You got by with some bullet hole in ya. Everyone takes some damage.", 
             dmg: 10,
@@ -19,8 +19,8 @@ randomEncounters =
             isSkillOrCombat: 0, 
             enemyName: "Rat Swarm", 
             hp: 20, 
-            minAttack: 5, 
-            maxAttack: 10
+            minAttack: 0, 
+            maxAttack: 5
         },
         { 
             name: "Cybernetic Thieves!", 
@@ -29,12 +29,12 @@ randomEncounters =
             enemyName: "Cybernetic Theives", 
             hp: 30, 
             minAttack: 10, 
-            maxAttack: 25
+            maxAttack: 15
         },
         { 
             name: "Drones!", 
             description: "A swarm of exploding drones flys by and begin to dive bomb you. Run and dodge to get away and not die.",
-            DC: 12, 
+            DC: 15, 
             passOutcome: "You dodge all the drones and got away with no harm",
             failOutcom: "The party have been hit by a few drones.  You guys look a little banged up.",
             dmg: 25, 
@@ -46,10 +46,10 @@ randomEncounters =
             name: "Looting from cars", 
             description: "You walk past a car that looks like it has something shiny inside. Break in and take what's inside without setting off alarms.", 
             DC: 15,
-            passOutcome: "You break in with no problem and find a medkit.  The party heals 10 health.",
+            passOutcome: "You break in with no problem and find a medkit.  The party heals 25 health.",
             failOutcom: "You set off the car alarm and you run with no item in hand",
             dmg: 0,
-            heal: 10,
+            heal: 25,
             findWeapon: false,
             isSkillOrCombat: 1
         },
@@ -62,7 +62,7 @@ randomEncounters =
             dmg: 0,
             heal: 0,
             findWeapon: true,
-            isSkillOrCombat: 1,
+            isSkillOrCombat: 1
         }
     ]
 
