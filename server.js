@@ -28,17 +28,18 @@ io.on('connection', (socket) => {
     if (gameRunning){
       socket.disconnect();
     }
+    else{
+      socket.emit('chat message', formatMessage('Server', 'Please enter your class (Solo, Medtech, or Netrunner) and type "start" to start the game when everyone is ready'));
+      healths = getRandomInt(100);
+      const user = userJoin(socket.id, username, room, false, null, healths, healths, getStartingWeapon());
 
-    socket.emit('chat message', formatMessage('Server', 'Please enter your class (Solo, Medtech, or Netrunner) and type "start" to start the game when everyone is ready'));
-    healths = getRandomInt(100);
-    const user = userJoin(socket.id, username, room, false, null, healths, healths, getStartingWeapon());
+      socket.join(user.room);
 
-    socket.join(user.room);
-
-    io.to(user.room).emit('roomUsers', {
-      room: user.room,
-      users: getRoomUsers(user.room)
-    });
+      io.to(user.room).emit('roomUsers', {
+        room: user.room,
+        users: getRoomUsers(user.room)
+      });
+    }
   })
 
   socket.on('chat message', (msg) => {
