@@ -19,7 +19,7 @@ randomEncounters =
             isSkillOrCombat: 0, 
             enemyName: "Rat Swarm", 
             hp: 20, 
-            minAttack: 5, 
+            minAttack: 1, 
             maxAttack: 10
         },
         { 
@@ -29,7 +29,7 @@ randomEncounters =
             enemyName: "Cybernetic Theives", 
             hp: 30, 
             minAttack: 10, 
-            maxAttack: 25
+            maxAttack: 15
         },
         { 
             name: "Drones!", 
@@ -46,10 +46,10 @@ randomEncounters =
             name: "Looting from cars", 
             description: "You walk past a car that looks like it has something shiny inside. Break in and take what's inside without setting off alarms.", 
             DC: 15,
-            passOutcome: "You break in with no problem and find a medkit.  The party heals 10 health.",
+            passOutcome: "You break in with no problem and find a medkit.  The party heals 25 health.",
             failOutcom: "You set off the car alarm and you run with no item in hand",
             dmg: 0,
-            heal: 10,
+            heal: 25,
             findWeapon: false,
             isSkillOrCombat: 1
         },
