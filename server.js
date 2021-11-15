@@ -103,7 +103,7 @@ io.on('connection', (socket) => {
       }
       if(encounterInProgress){
         if(encounter.isSkillOrCombat === 0){
-          if (validCombatMessages.includes(msg) && socket.id === currentPersonID){
+          if (validCombatMessages.includes(msg.toLowerCase()) && socket.id === currentPersonID){
             damage = randomIntFromInterval(currentPerson.weapon.min, currentPerson.weapon.max);
             enemyHP -= damage;
             io.to(room).emit('chat message', formatMessage("server", `${getCurrentUser(currentPersonID).username} dealt ${damage} damage leaving ${encounter.enemyName} with ${enemyHP >= 0 ? enemyHP : 0} HP`));
@@ -124,7 +124,7 @@ io.on('connection', (socket) => {
           }
         }
         else{
-          if (validSkillMessages.includes(msg) && socket.id === currentPersonID){
+          if (validSkillMessages.includes(msg.toLowerCase()) && socket.id === currentPersonID){
             roll = randomIntFromInterval(1, 20);
             if (roll >= encounter.DC){
               io.to(room).emit('chat message', formatMessage("server", encounter.passOutcome));
