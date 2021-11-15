@@ -85,14 +85,14 @@ io.on('connection', (socket) => {
     usersReady = true;
     roomUsers.forEach(user => !user.characterCreated ? usersReady = false : {});
 
-    if(msg === "start" && usersReady){
+    if(msg.toLowerCase() === "start" && usersReady){
       io.to(room).emit('userdata', {
         room: user.room,
         users: getRoomUsers(user.room)
       });
       gameRunning = true;
     }
-    else if (msg === "start" && !usersReady){
+    else if (msg.toLowerCase() === "start" && !usersReady){
         io.to(room).emit('chat message', formatMessage("server", `Someone in the room has not selected their class`));
     }
 
@@ -150,7 +150,13 @@ io.on('connection', (socket) => {
             else{
               io.to(room).emit('chat message', formatMessage("server", encounter.failOutcom));
               roomUsers.forEach(user => user.health -= encounter.dmg);
-              roomUsers.forEach(user => user.health <= 0 ? disconnectSocket(user.id) : {});
+              roomUsers.forEach(user => {
+                if (user.health <= 0) { 
+                  io.to(room).emit('chat message', formatMessage("server", `${getCurrentUser(currentPersonID).username} died`));
+                  disconnectSocket(currentPersonID); 
+                  userLeave(currentPersonID);
+                }
+              });
               io.to(room).emit('userdata', {
                 room: user.room,
                 users: getRoomUsers(user.room)
