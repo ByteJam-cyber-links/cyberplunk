@@ -149,7 +149,13 @@ io.on('connection', (socket) => {
             else{
               io.to(room).emit('chat message', formatMessage("server", encounter.failOutcom));
               roomUsers.forEach(user => user.health -= encounter.dmg);
-              roomUsers.forEach(user => user.health <= 0 ? disconnectSocket(user.id) : {});
+              roomUsers.forEach(user => {
+                if (user.health <= 0) { 
+                  io.to(room).emit('chat message', formatMessage("server", `${getCurrentUser(currentPersonID).username} died`));
+                  disconnectSocket(currentPersonID); 
+                  userLeave(currentPersonID);
+                }
+              });
               io.to(room).emit('userdata', {
                 room: user.room,
                 users: getRoomUsers(user.room)
