@@ -36,7 +36,7 @@ io.on('connection', (socket) => {
     }
     else{
       socket.emit('chat message', formatMessage('Server', 'Please enter your class (Solo, Medtech, or Netrunner) and type "start" to start the game when everyone is ready'));
-      healths = getRandomInt(5);
+      healths = getRandomInt(100);
       const user = userJoin(socket.id, username, room, false, null, healths, healths, getStartingWeapon());
 
       socket.join(user.room);
