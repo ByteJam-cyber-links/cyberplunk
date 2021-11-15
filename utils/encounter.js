@@ -5,7 +5,7 @@ randomEncounters =
         { 
             name: "Sneaking Past Guards", 
             description: "You turn around the corner and see guards blocking your path. Sneak past to get by.", 
-            DC: 10, 
+            DC: 13, 
             passOutcome: "You pass the guards without them spotting you.", 
             failOutcom: "You have been spotted! You got by with some bullet hole in ya. Everyone takes some damage.", 
             dmg: 10,
@@ -34,7 +34,7 @@ randomEncounters =
         { 
             name: "Drones!", 
             description: "A swarm of exploding drones flys by and begin to dive bomb you. Run and dodge to get away and not die.",
-            DC: 12, 
+            DC: 15, 
             passOutcome: "You dodge all the drones and got away with no harm",
             failOutcom: "The party have been hit by a few drones.  You guys look a little banged up.",
             dmg: 25, 
