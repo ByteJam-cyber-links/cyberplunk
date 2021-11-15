@@ -113,8 +113,7 @@ io.on('connection', (socket) => {
               io.to(room).emit('chat message', formatMessage("server", `${encounter.enemyName} dealt ${damage} damage to ${getCurrentUser(currentPersonID).username}`));
               if(getCurrentUser(currentPersonID).health <= 0) {
                 io.to(room).emit('chat message', formatMessage("server", `${getCurrentUser(currentPersonID).username} died`));
-                setTimeout (() => {disconnectSocket(currentPersonID)}, 5 * 1000); 
-                //disconnectSocket(currentPersonID);
+                disconnectSocket(currentPersonID); 
                 userLeave(currentPersonID);
               }
               io.to(room).emit('userdata', {
@@ -127,7 +126,6 @@ io.on('connection', (socket) => {
         else{
           if (validSkillMessages.includes(msg.toLowerCase()) && socket.id === currentPersonID){
             roll = randomIntFromInterval(1, 20);
-            io.to(room).emit('chat message', formatMessage("server",`You rolled: ${roll}` ));
             if (roll >= encounter.DC){
               io.to(room).emit('chat message', formatMessage("server", encounter.passOutcome));
               if(encounter.findWeapon){
@@ -154,8 +152,7 @@ io.on('connection', (socket) => {
               roomUsers.forEach(user => {
                 if (user.health <= 0) { 
                   io.to(room).emit('chat message', formatMessage("server", `${getCurrentUser(currentPersonID).username} died`));
-                  setTimeout (() => {disconnectSocket(currentPersonID)}, 5 * 1000);
-                  //disconnectSocket(currentPersonID);
+                  disconnectSocket(currentPersonID); 
                   userLeave(currentPersonID);
                 }
               });
